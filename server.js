@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 import postRouter, { init } from './routes/posts.js';
 import { connectDB } from './database/db.js';
@@ -7,6 +8,9 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
+
+// CORS 설정
+app.use(cors()); // 모든 도메인에서 접근 허용 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
