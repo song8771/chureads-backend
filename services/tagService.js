@@ -54,7 +54,7 @@ const createTagPrompt = (content) => {
  * @returns {Promise<Array<string>>} 생성된 태그 3개가 담긴 문자열 배열
  */
 
-const generateTags = async (content) => {
+export const generateTags = async (content) => {
  const messages = createTagPrompt(content);
  
  try {
