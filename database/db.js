@@ -9,7 +9,7 @@ export const connectDB = async () => {
     try {
         if (db)  return db; // 이미 연결되어 있다면 기존 db 반환
         console.log("🚀 ~ connectDB ~ process.env.NODE_ENV:", process.env.NODE_ENV)
-        const MONGODB_URI = process.env.NODE_ENV === 'development' ? MONGODB_URI_LOCAL : MONGODB_URI_ATLAS;
+        const MONGODB_URI = MONGODB_URI_ATLAS;
         const client = new MongoClient(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
