@@ -1,5 +1,7 @@
 import express from 'express';
 import { generateTags } from '../services/tagService.js';
+import { ObjectId } from 'mongodb';
+import { broadcastToClients } from '../sse/sseManager.js';
 
 // 게시물 관련 모든 API 엔드포인트를 정의하는 라우터
 const router = express.Router();
@@ -52,9 +54,18 @@ router.post("/", async (req, res) => {
       likedUsers: [], //좋아요 한 UserID목록
       createdAt: new Date(),
     };
+    
     const result = await collection.insertOne(newItem);
-
+    
     // TODO: 새 게시물 알림을 모든 클라이언트에게 전송
+    broadcastToClients('newPost', { 
+      postId: result.insertedId,
+      userName: newItem.userName,
+      content: newItem.content.substring(0, 20) + (newItem.content.length > 20 ? '...' : ""), // 내용의 일부만 전송
+      createdAt: newItem.createdAt,
+      message: `${newItem.userName}님이 새 게시물을 작성했습니다.`,
+    });
+
     res.status(201).json({ ...result, tags });
   } catch (error) {
     console.log(error);
@@ -80,6 +91,7 @@ router.put("/:id", async (req, res) => {
 // DELETE /posts/:id - 특정 게시물 삭제
 router.delete("/:id", async (req, res) => {
   // URL 파라미터에서 게시물 ID를 받아서 해당 게시물을 삭제
+  console.log("🚀 ~ router.delete ~ req.params:", req.params);
   try {
     const { id } = req.params;
     const result = await collection.deleteOne({ _id: new ObjectId(id) });

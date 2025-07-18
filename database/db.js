@@ -13,10 +13,10 @@ export const connectDB = async () => {
         });
         await client.connect();
         db = client.db(process.env.DB_NAME);
-        console.log("⭕ MongoDB에 연결 성공.");
+        console.log("✅ MongoDB에 연결 성공.");
         return db
     } catch (error) {
-        console.error("❌ MongoDB 연결 실패:", error);
+        console.error("❌ MongoDB 연결 실패 :", error);
         process.exit(1);
     }
 }

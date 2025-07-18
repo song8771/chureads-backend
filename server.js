@@ -1,9 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-
 import postRouter, { init } from './routes/posts.js';
 import { connectDB } from './database/db.js';
+import { handleSSEConnection } from './sse/sseManager.js';
+
 dotenv.config();
 
 const app = express();
@@ -14,6 +15,9 @@ app.use(cors()); // 모든 도메인에서 접근 허용
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('/events', handleSSEConnection)
+
 //라우터 미들웨어 설정
 app.use('/posts', postRouter);
 
